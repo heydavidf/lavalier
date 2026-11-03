@@ -243,7 +243,8 @@ final class SettingsWindowController: NSWindowController, NSWindowDelegate {
             field.stringValue = ""
             testResult.stringValue = "\(account.service.rawValue) key saved to the Keychain."
         } catch {
-            testResult.stringValue = "Could not save the key to the Keychain. Make sure your login keychain is unlocked, then try again. (\(error))"
+            Log.app.error("keychain save failed: \(String(describing: error), privacy: .public)")
+            testResult.stringValue = "Could not save the key to the Keychain. Make sure your login keychain is unlocked, then try again."
         }
         refreshKeyStatus()
         onSettingsChanged?()
@@ -255,7 +256,8 @@ final class SettingsWindowController: NSWindowController, NSWindowDelegate {
             try store.delete(account)
             testResult.stringValue = "\(account.service.rawValue) key removed."
         } catch {
-            testResult.stringValue = "Could not remove the \(account.service.rawValue) key from the Keychain. Make sure your login keychain is unlocked, then try again. (\(error))"
+            Log.app.error("keychain remove failed: \(String(describing: error), privacy: .public)")
+            testResult.stringValue = "Could not remove the \(account.service.rawValue) key from the Keychain. Make sure your login keychain is unlocked, then try again."
         }
         refreshKeyStatus()
         onSettingsChanged?()

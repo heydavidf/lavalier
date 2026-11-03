@@ -30,9 +30,9 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Newest stable Xcode on the runner (the project is tested with Xcode 27)
+      - name: Newest stable Xcode on the runner
         run: |
-          newest=$(find /Applications -maxdepth 1 -name 'Xcode_[0-9]*.app' | grep -v -i -e beta -e rc | sort -V | tail -n 1)
+          newest=$(find /Applications -maxdepth 1 -name 'Xcode_[0-9]*.app' | grep -v -i -E 'beta|_rc|release.?candidate' | sort -V | tail -n 1)
           if [ -n "$newest" ]; then sudo xcode-select -s "$newest/Contents/Developer"; fi
           sw_vers
           xcodebuild -version

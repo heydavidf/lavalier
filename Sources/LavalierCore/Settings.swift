@@ -91,10 +91,9 @@ public final class AppSettings: @unchecked Sendable {
         set { defaults.set(newValue.rawValue, forKey: Key.menuBarGlyph) }
     }
 
-    /// One-time move off Right Option and Right Command, for installs from before Right Control became the
-    /// default (both keys often have other uses). A new install starts on Right Control and is never moved.
-    /// Runs once; afterwards the user's choice is respected whatever it is. Returns the key that was replaced,
-    /// so the app can say so on screen.
+    /// One-time move off Right Option (some apps use its double-tap), for early installs that had it saved. A new
+    /// install starts on the default, Right Command, and is never moved. Runs once; afterwards the user's choice
+    /// is respected whatever it is. Returns the key that was replaced, so the app can say so on screen.
     @discardableResult
     public func migrateHotkeyAwayFromConflicts() -> HotkeyChoice? {
         guard !defaults.bool(forKey: Key.hotkeyConflictMigration) else { return nil }

@@ -44,7 +44,7 @@ cd lavalier
 open build/Lavalier.app
 ```
 
-Then follow [docs/SETUP.md](docs/SETUP.md) from step 4: grant the Microphone and Accessibility permissions, paste your keys in Settings > Keys, choose a push-to-talk key in Settings > Shortcuts (the default, Right Control, does not exist on MacBook keyboards), and dictate into TextEdit.
+Then follow [docs/SETUP.md](docs/SETUP.md) from step 4: grant the Microphone and Accessibility permissions, paste your keys in Settings > Keys, and dictate into TextEdit by holding Right Command, the default push-to-talk key (Settings > Shortcuts changes it).
 
 ## How it works
 
@@ -61,9 +61,9 @@ What goes where:
 | Your voice | Streamed to ElevenLabs while the key is held. Not saved on your Mac. |
 | The transcript | Sent to Anthropic for clean-up, then inserted. Kept in memory for Copy Last Dictation. |
 | API keys | Your macOS Keychain (service "Lavalier"). |
-| Personal dictionary | `~/Library/Application Support/Lavalier/dictionary.txt`: names and words you want spelled your way. The words go to Anthropic with every clean-up, and to ElevenLabs as well if you switch on keyterms. |
+| Personal dictionary | `~/Library/Application Support/Lavalier/dictionary.txt`: names and words you want spelled your way. The words go to Anthropic with every clean-up, and up to 50 of them to ElevenLabs as well if you switch on keyterms. |
 | Usage counts | `~/Library/Application Support/Lavalier/usage.json`: Claude calls and tokens per month, and the last dictation's timings (no text). |
-| Text log | Off by default. If you switch it on in Settings, `timings.jsonl` in the same folder keeps transcripts, timings and the name of the app that received the text, never audio. It grows until you delete it. |
+| Text log | Off by default. If you switch it on in Settings, `timings.jsonl` in the same folder keeps transcripts, timings and the identifier of the app that received the text (such as `com.apple.TextEdit`), never audio. It grows until you delete it. |
 
 ElevenLabs and Anthropic handle your audio and text under their own terms and privacy policies.
 
@@ -89,7 +89,7 @@ ElevenLabs and Anthropic handle your audio and text under their own terms and pr
 
 - **Update:** quit Lavalier, then `git pull` and `./build.sh` in the clone. Your keys, settings and dictionary are kept. Details: [docs/SETUP.md#update](docs/SETUP.md#update).
 - **Remove:** [docs/SETUP.md#uninstall](docs/SETUP.md#uninstall) lists every file, preference and Keychain item to delete.
-- **Help:** open an issue on GitHub. Never include your API keys. Lavalier's log lines never contain your dictated text or keys, but they do show where the app is (a path with your Mac user name), your microphone's name and any error text from ElevenLabs or Anthropic, so read them before posting. Security problems: see [SECURITY.md](SECURITY.md).
+- **Help:** open an issue on GitHub. Never include your API keys. Lavalier's log lines never contain your keys or, with one rare exception, your dictated text: if ElevenLabs ever sends a reply Lavalier cannot read, its first 200 characters are logged. They do show where the app is (a path with your Mac user name), your microphone's name, which app received the text and how, and any error text from ElevenLabs or Anthropic, so read them before posting. Security problems: see [SECURITY.md](SECURITY.md).
 
 This is maintained by one person in spare time, so replies may take a while.
 

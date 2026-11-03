@@ -8,12 +8,13 @@ public enum HotkeyChoice: String, CaseIterable, Codable, Sendable {
     case rightOption
     case rightCommand
 
-    /// Right Control: a modifier that few other tools react to. Right Option and Right Command often have other
-    /// uses (a double-tap shortcut in another app, another dictation tool).
-    public static let `default`: HotkeyChoice = .rightControl
+    /// Right Command: on every Mac keyboard, MacBooks included, and rarely part of everyday shortcuts. Right Control
+    /// is missing on MacBook keyboards, Right Option types special characters on many layouts, and a left-side
+    /// modifier would start a dictation with every shortcut that uses it.
+    public static let `default`: HotkeyChoice = .rightCommand
 
     /// Keys known to collide with other tools; `AppSettings.migrateHotkeyAwayFromConflicts` moves off them once.
-    public static let conflicting: Set<HotkeyChoice> = [.rightOption, .rightCommand]
+    public static let conflicting: Set<HotkeyChoice> = [.rightOption]
 
     /// Virtual key code reported in the flagsChanged event.
     public var keyCode: Int64 {

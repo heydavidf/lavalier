@@ -4,7 +4,7 @@ import CoreGraphics
 // Configurable push-to-talk shortcuts (3 Nov 2026). The user can set several at once: a modifier key
 // held on its own, a keyboard key (optionally with modifiers), or an extra mouse button. Holding any one of
 // them starts dictation; releasing ends it. The single-key `HotkeyChoice` setting stays as the fallback when no
-// list has been saved, so the default (Right Control) is not changed here.
+// list has been saved, so the default (`HotkeyChoice.default`) is not changed here.
 
 /// A modifier key that can be held on its own. Left and right are told apart by the device-specific flag bits.
 public enum ModifierKey: String, CaseIterable, Codable, Sendable {

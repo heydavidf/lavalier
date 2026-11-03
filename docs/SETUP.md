@@ -103,12 +103,14 @@ build/Lavalier.app/Contents/MacOS/Lavalier --print-permissions
 
 ## 6. Choose your push-to-talk key
 
-The default key is **Right Control**. MacBook keyboards have no Right Control key, so most people need to choose another one:
+The default key is **Right Command** (⌘, to the right of the space bar). Every Mac keyboard has it, MacBooks included, so most people can skip this step.
+
+Choose a different key if another app already uses Right Command (another dictation app, for example), or if you prefer another key:
 
 1. Settings > **Shortcuts** > **Add Shortcut…**, then press the key you want. A modifier key on its own (for example Right Option), a key or combination (for example F13), or a middle or side mouse button all work.
-2. Remove Right Control if you don't need it.
+2. Remove Right Command if you don't want it as well.
 
-Pick a key nothing else on your Mac uses. Right Option is on every Mac keyboard and works for most people; Settings shows a note under it because some apps use a double-tap of Option as their own shortcut, so choose another key if one of yours does. If you choose fn (Globe), first set System Settings > Keyboard > "Press 🌐 key to" to "Do Nothing". If you hold Right Control, Right Option, Right Command or fn on its own for about a second while it is not one of your shortcuts, Lavalier shows a hint naming the key it listens for. Other keys, such as Left Control, give no hint.
+Avoid the left-hand Command, Option, Control and Shift keys: a modifier key starts a dictation whenever it goes down, so every shortcut that uses it would start one too. Settings shows a note under keys like these. If you choose fn (Globe), first set System Settings > Keyboard > "Press 🌐 key to" to "Do Nothing". If you hold Right Control, Right Option, Right Command or fn on its own for about a second while it is not one of your shortcuts, Lavalier shows a hint naming the key it listens for. Other keys, such as Left Control, give no hint.
 
 ## 7. Your first dictation
 
@@ -132,7 +134,7 @@ That's it: Lavalier is set up. Settings > General has **Launch at login** if you
 | "Claude took too long; the raw transcript was used instead." | The untidied text was inserted. Usually temporary. |
 | The text appears twice, or not at all, in one app | Tell us in an issue which app it was (see the README). Copy Last Dictation in the menu gets the text back. |
 
-For a closer look, Lavalier writes short log lines. They never contain your dictated text or keys, but they show where the app is (a path that includes your Mac user name), your microphone's name and any error text from ElevenLabs or Anthropic, so read them before you share them:
+For a closer look, Lavalier writes short log lines. They never contain your keys or, with one rare exception, your dictated text: if ElevenLabs ever sends a reply Lavalier cannot read, its first 200 characters are logged. They do show where the app is (a path that includes your Mac user name), your microphone's name, which app received the text and how, and any error text from ElevenLabs or Anthropic, so read them before you share them:
 
 ```sh
 log show --predicate 'subsystem == "com.davidfinnegan.lavalier"' --last 10m --info
@@ -156,10 +158,11 @@ Your keys, settings and dictionary live outside the clone and are kept. With an 
 1. In Settings > General, switch off **Launch at login**. In Settings > Keys, click **Remove** for both keys.
 2. Quit Lavalier from its menu.
 3. Delete the `lavalier` folder you cloned.
-4. Remove Lavalier's files, preferences and permission entries:
+4. Remove Lavalier's files, caches, preferences and permission entries:
 
 ```sh
 rm -rf "$HOME/Library/Application Support/Lavalier"
+rm -rf "$HOME/Library/Caches/com.davidfinnegan.lavalier" "$HOME/Library/HTTPStorages/com.davidfinnegan.lavalier"
 defaults delete com.davidfinnegan.lavalier
 tccutil reset All com.davidfinnegan.lavalier
 ```

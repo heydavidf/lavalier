@@ -331,24 +331,34 @@ final class HotkeyDefaultTests: XCTestCase {
         return (AppSettings(defaults: defaults), { defaults.removePersistentDomain(forName: suite) })
     }
 
-    func testDefaultAvoidsTheKeysOtherToolsUse() {
-        XCTAssertEqual(HotkeyChoice.default, .rightControl)
+    func testDefaultIsOnEveryMacKeyboardAndAvoidsTheKeysOtherToolsUse() {
+        XCTAssertEqual(HotkeyChoice.default, .rightCommand, "MacBook keyboards have Right Command but no Right Control")
         XCTAssertFalse(HotkeyChoice.conflicting.contains(HotkeyChoice.default))
-        XCTAssertEqual(HotkeyChoice.conflicting, [.rightOption, .rightCommand])
+        XCTAssertEqual(HotkeyChoice.conflicting, [.rightOption])
         XCTAssertNotNil(HotkeyChoice.rightOption.note)
         XCTAssertNotNil(HotkeyChoice.rightCommand.note)
-        XCTAssertEqual(HotkeyChoice.allCases.first, .rightControl, "the safe key is listed first in Settings")
+        XCTAssertTrue(HotkeyChoice.allCases.contains(HotkeyChoice.default), "the default is offered in Settings")
+    }
+
+    func testAFreshInstallStartsOnRightCommandAndIsNeverMoved() {
+        let (settings, cleanup) = freshSettings()
+        defer { cleanup() }
+        XCTAssertNil(settings.migrateHotkeyAwayFromConflicts(), "nothing to move on a fresh install")
+        XCTAssertEqual(settings.hotkey, .rightCommand)
+        XCTAssertEqual(settings.hotkeys, [.modifier(key: .rightCommand)])
+        XCTAssertNil(settings.migrateHotkeyAwayFromConflicts(), "and never later")
+        XCTAssertEqual(settings.hotkey, .rightCommand)
     }
 
     func testMigrationMovesOffAConflictingKeyExactlyOnce() {
         let (settings, cleanup) = freshSettings()
         defer { cleanup() }
-        settings.hotkey = .rightCommand
-        XCTAssertEqual(settings.migrateHotkeyAwayFromConflicts(), .rightCommand)
-        XCTAssertEqual(settings.hotkey, .rightControl)
-        settings.hotkey = .rightCommand // chosen again on purpose
+        settings.hotkey = .rightOption
+        XCTAssertEqual(settings.migrateHotkeyAwayFromConflicts(), .rightOption)
+        XCTAssertEqual(settings.hotkey, .rightCommand)
+        settings.hotkey = .rightOption // chosen again on purpose
         XCTAssertNil(settings.migrateHotkeyAwayFromConflicts())
-        XCTAssertEqual(settings.hotkey, .rightCommand, "a deliberate later choice is respected")
+        XCTAssertEqual(settings.hotkey, .rightOption, "a deliberate later choice is respected")
     }
 
     func testMigrationLeavesASafeKeyAlone() {
