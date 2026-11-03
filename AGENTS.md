@@ -50,7 +50,7 @@ python3 -m unittest discover -s .github/tests -v
 bash .github/tripwire.sh origin/main
 ```
 
-`swift test` must report every test passing (69 at version 0.1.0). The tests need no network and no API keys: the long-dictation tests run a fake ElevenLabs server on 127.0.0.1, and the Keychain tests create and then delete items under the service names `Lavalier.tests`, `Lavalier.tests.presence` and `Lavalier.tests.empty` in the login keychain of the user running them. `LAVALIER_SIGN_IDENTITY=- ./build.sh` builds the app bundle signed ad hoc, as CI does; drop the variable to sign with your own Apple Development certificate. `--render-glyphs` writes every menu-bar icon in every state as PNG files and is a quick check that the built app starts. Pass the branch you will merge into to the tripwire (`origin/main` in a clone of the GitHub repository); with no argument it checks the whole tree but cannot spot newly silenced checks.
+`swift test` must report every test passing (70 at version 0.1.0). The tests need no network and no API keys. The long-dictation tests run a fake ElevenLabs server bound to 127.0.0.1. The Keychain tests create and then delete items under the service names `Lavalier.tests` and `Lavalier.tests.presence` in the login keychain of the user running them, and look up `Lavalier.tests.empty`, which must not exist. Two settings tests keep their preferences in the fixed domains `lavalier.tests.hotkeys` and `lavalier.tests.hotkey-default`, emptied on every run. `LAVALIER_SIGN_IDENTITY=- ./build.sh` builds the app bundle signed ad hoc, as CI does; drop the variable to sign with your own Apple Development certificate. `--render-glyphs` writes every menu-bar icon in every state as PNG files and is a quick check that the built app starts. Pass the branch you will merge into to the tripwire (`origin/main` in a clone of the GitHub repository); with no argument it checks the whole tree but cannot spot newly silenced checks.
 
 CI (`.github/workflows/checks.yml`) runs the build, the tests and the app bundle on a macOS runner, and the shell-block check, its own tests, the tripwire and gitleaks on Linux, on every push to `main`, on pull requests and weekly. It does not run `actionlint` or `zizmor`; run those yourself when you change the workflow.
 
@@ -90,12 +90,12 @@ Run from Terminal, `--print-permissions` and `--probe-hotkey` report Terminal's 
 2. Run every check above before saying a change is done, and quote the output.
 3. Do not silence a check to get green: no skipped or disabled tests, no disabled rules. The tripwire fails the build unless the line says `tripwire-allow` with a reason.
 4. Stop any app instance or server you started. Leave no stray files (clips, logs, glyph folders, caches) in the repository folder.
-5. For non-trivial changes, a different agent writes an independent scenario test before the change is accepted.
+5. For non-trivial changes, a scenario test written independently of the change, by another person or another agent, is added before the change is accepted.
 
 ## Change constraints
 
 - API keys live only in the macOS Keychain (service `Lavalier`, accounts `elevenlabs` and `anthropic`). Never write a key to a file, user defaults, a log line or test output. The app never reads keys from the environment; only `lavalier-cli` and `--import-keys-from-environment` do.
-- Unified-log lines never contain dictated text or keys. The local text log (`timings.jsonl`) stays off by default. Audio is never written to disk.
+- Unified-log lines never contain dictated text or keys. The local text log (`timings.jsonl`) stays off by default. Audio is never written to disk. Network sessions keep no URL cache (`urlCache = nil`), because the keys travel in request headers.
 - Keep the bundle identifier `com.davidfinnegan.lavalier`, the defaults domain and the Keychain service stable: changing them resets every user's permissions and strands their saved keys.
 - Without a saved shortcut list the default key is Right Control (`HotkeyChoice.default`); a change to the default needs an issue first, because it changes what existing users hold.
 - No third-party Swift packages without an issue first.

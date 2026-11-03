@@ -89,6 +89,9 @@ public final class ClaudeClient: Sendable {
         let config = URLSessionConfiguration.default
         config.waitsForConnectivity = false
         config.timeoutIntervalForRequest = 15
+        // The key travels in a request header: keep no URL cache, so it can never be written to Cache.db.
+        config.urlCache = nil
+        config.requestCachePolicy = .reloadIgnoringLocalCacheData
         return URLSession(configuration: config)
     }
 

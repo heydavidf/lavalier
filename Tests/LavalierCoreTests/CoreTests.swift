@@ -324,8 +324,10 @@ final class InsertionPolicyTests: XCTestCase {
 
 final class HotkeyDefaultTests: XCTestCase {
     private func freshSettings() -> (AppSettings, () -> Void) {
-        let suite = "LavalierTests-\(UUID().uuidString)"
+        // One fixed name, emptied first, so runs do not leave a new preferences file each time.
+        let suite = "lavalier.tests.hotkey-default"
         let defaults = UserDefaults(suiteName: suite)!
+        defaults.removePersistentDomain(forName: suite)
         return (AppSettings(defaults: defaults), { defaults.removePersistentDomain(forName: suite) })
     }
 
@@ -426,5 +428,15 @@ final class WrongKeyDetectorTests: XCTestCase {
         d.update(chosen: .rightCommand)
         _ = d.handle(keyCode: 54, flagsRaw: cmd | 0x10, at: 0)
         XCTAssertNil(d.handle(keyCode: 54, flagsRaw: 0, at: 2))
+    }
+}
+
+/// API keys travel in request headers, so no session may keep a URL cache: a cached request could write the
+/// header, and with it the key, to Cache.db on disk.
+final class SessionCacheTests: XCTestCase {
+    func testNoSessionKeepsAURLCache() {
+        XCTAssertNil(ClaudeClient.makeSession().configuration.urlCache, "Claude clean-up session")
+        XCTAssertNil(ElevenLabsRealtime.makeSession().configuration.urlCache, "ElevenLabs realtime session")
+        XCTAssertNil(ElevenLabsAccount.session.configuration.urlCache, "ElevenLabs subscription session")
     }
 }

@@ -63,6 +63,9 @@ public final class ElevenLabsRealtime: @unchecked Sendable {
         // Covers the whole WebSocket session, so it must outlast the longest dictation (it was
         // 120 s, which would have cut every dictation at two minutes).
         config.timeoutIntervalForResource = maximumSessionSeconds
+        // The key travels in a request header: keep no URL cache, so it can never be written to Cache.db.
+        config.urlCache = nil
+        config.requestCachePolicy = .reloadIgnoringLocalCacheData
         return URLSession(configuration: config)
     }
 
@@ -360,7 +363,15 @@ public struct ElevenLabsSubscription: Sendable, Equatable {
 public enum ElevenLabsAccount {
     public static var subscriptionEndpoint = URL(string: "https://api.elevenlabs.io/v1/user/subscription")!
 
-    public static func fetchSubscription(apiKey: String, session: URLSession = .shared) async throws -> ElevenLabsSubscription {
+    /// Like the other sessions, no URL cache: the key travels in a request header.
+    public static let session: URLSession = {
+        let config = URLSessionConfiguration.default
+        config.urlCache = nil
+        config.requestCachePolicy = .reloadIgnoringLocalCacheData
+        return URLSession(configuration: config)
+    }()
+
+    public static func fetchSubscription(apiKey: String, session: URLSession = ElevenLabsAccount.session) async throws -> ElevenLabsSubscription {
         var request = URLRequest(url: subscriptionEndpoint)
         request.timeoutInterval = 10
         request.setValue(apiKey, forHTTPHeaderField: "xi-api-key")

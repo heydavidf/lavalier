@@ -29,7 +29,7 @@ enum Permission: CaseIterable {
         switch self {
         case .microphone: return "To hear you while the key is held. Audio goes to ElevenLabs and is not stored."
         case .accessibility: return "To watch the push-to-talk key and to insert text into the app you are using."
-        case .inputMonitoring: return "Only if macOS asks for it to see the key. Try without it first."
+        case .inputMonitoring: return "Needed when a shortcut is a keyboard key or a mouse button, or if macOS asks for it to see the key."
         }
     }
 

@@ -105,9 +105,11 @@ final class HotkeyBindingTests: XCTestCase {
 /// key is used, and without that, `HotkeyChoice.default`.
 final class HotkeyListSettingsTests: XCTestCase {
     private func freshSettings() -> AppSettings {
-        let name = "lavalier.tests.hotkeys.\(UUID().uuidString)"
+        // One fixed name, emptied before and after each test, so runs do not leave a new preferences file each time.
+        let name = "lavalier.tests.hotkeys"
         let d = UserDefaults(suiteName: name)!
         d.removePersistentDomain(forName: name)
+        addTeardownBlock { UserDefaults(suiteName: name)?.removePersistentDomain(forName: name) }
         return AppSettings(defaults: d)
     }
 

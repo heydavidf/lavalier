@@ -108,7 +108,7 @@ The default key is **Right Control**. MacBook keyboards have no Right Control ke
 1. Settings > **Shortcuts** > **Add Shortcut…**, then press the key you want. A modifier key on its own (for example Right Option), a key or combination (for example F13), or a middle or side mouse button all work.
 2. Remove Right Control if you don't need it.
 
-Pick a key nothing else on your Mac uses. Right Option is on every Mac keyboard and works for most people. If you choose fn (Globe), first set System Settings > Keyboard > "Press 🌐 key to" to "Do Nothing". Holding one of the other modifier keys by mistake shows a hint naming the key Lavalier listens for.
+Pick a key nothing else on your Mac uses. Right Option is on every Mac keyboard and works for most people; Settings shows a note under it because some apps use a double-tap of Option as their own shortcut, so choose another key if one of yours does. If you choose fn (Globe), first set System Settings > Keyboard > "Press 🌐 key to" to "Do Nothing". If you hold Right Control, Right Option, Right Command or fn on its own for about a second while it is not one of your shortcuts, Lavalier shows a hint naming the key it listens for. Other keys, such as Left Control, give no hint.
 
 ## 7. Your first dictation
 
@@ -132,7 +132,7 @@ That's it: Lavalier is set up. Settings > General has **Launch at login** if you
 | "Claude took too long; the raw transcript was used instead." | The untidied text was inserted. Usually temporary. |
 | The text appears twice, or not at all, in one app | Tell us in an issue which app it was (see the README). Copy Last Dictation in the menu gets the text back. |
 
-For a closer look, Lavalier writes short log lines (never your text or keys):
+For a closer look, Lavalier writes short log lines. They never contain your dictated text or keys, but they show where the app is (a path that includes your Mac user name), your microphone's name and any error text from ElevenLabs or Anthropic, so read them before you share them:
 
 ```sh
 log show --predicate 'subsystem == "com.davidfinnegan.lavalier"' --last 10m --info

@@ -1,6 +1,6 @@
 """Tests for .github/check-shell-blocks.sh (run: python3 -m unittest discover -s .github/tests -v).
 
-Copied from the repo standard; it lives in .github/tests/ because Tests/ holds the Swift tests. Each test makes a
+It lives in .github/tests/ because Tests/ holds the Swift tests. Each test makes a
 throwaway Git repository with one Markdown file and runs the repository's script in it. Skill guides often keep
 commands in fenced blocks indented inside numbered lists, so the check must read those as well as blocks at the
 start of a line.

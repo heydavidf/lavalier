@@ -1,4 +1,4 @@
-# Checks for Lavalier, a Swift menu-bar app for macOS (shaped on the repo-standard templates).
+# Checks for Lavalier, a Swift menu-bar app for macOS.
 # Runs on every push to main, on pull requests, weekly and on demand.
 # Two jobs, two check names for the require-ci ruleset: "checks" (build and tests on macOS) and
 # "hygiene" (docs, tripwire and secret scan on Linux). Keep both names stable.
@@ -12,8 +12,7 @@ on:
     - cron: "29 6 * * 1"
   workflow_dispatch:
 
-permissions:
-  contents: read
+permissions: {}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -31,8 +30,10 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Toolchain
+      - name: Newest stable Xcode on the runner (the project is tested with Xcode 27)
         run: |
+          newest=$(find /Applications -maxdepth 1 -name 'Xcode_[0-9]*.app' | grep -v -i -e beta -e rc | sort -V | tail -n 1)
+          if [ -n "$newest" ]; then sudo xcode-select -s "$newest/Contents/Developer"; fi
           sw_vers
           xcodebuild -version
           swift --version
@@ -57,7 +58,7 @@ jobs:
 
   hygiene:
     name: hygiene
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: read
@@ -76,6 +77,7 @@ jobs:
 
       - name: Shell blocks in the docs paste cleanly (bash and zsh)
         run: |
+          sudo apt-get update -qq
           sudo apt-get install -y -qq --no-install-recommends zsh
           bash .github/check-shell-blocks.sh
 

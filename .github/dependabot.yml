@@ -1,7 +1,5 @@
-# Template: .github/dependabot.yml
-# Keeps the pinned action commits in CI up to date (monthly, one grouped PR).
-# npm/pip security fixes come from "Dependabot security updates" in repo settings (see apply-repo-settings.sh);
-# version-update PRs for dependencies are deliberately off to avoid PR noise for a solo maintainer.
+# Keeps the pinned action commits in CI up to date (monthly, one grouped pull request).
+# The Swift package has no dependencies, so actions are the only thing to update.
 version: 2
 updates:
   - package-ecosystem: github-actions

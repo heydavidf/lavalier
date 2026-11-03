@@ -160,7 +160,9 @@ final class FakeScribeServer: @unchecked Sendable {
         let ws = NWProtocolWebSocket.Options()
         ws.autoReplyPing = true
         params.defaultProtocolStack.applicationProtocols.insert(ws, at: 0)
-        listener = try NWListener(using: params, on: .any)
+        // Loopback only, so the test never accepts connections from the network (and never triggers a firewall prompt).
+        params.requiredLocalEndpoint = NWEndpoint.hostPort(host: .ipv4(.loopback), port: .any)
+        listener = try NWListener(using: params)
         autoCommitBytes = Int(autoCommitSeconds * 16000) * 2
     }
 
