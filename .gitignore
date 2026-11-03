@@ -1,0 +1,11 @@
+.build/
+build/
+.swiftpm/
+*.xcodeproj/
+*.app
+.DS_Store
+.env*
+*.wav
+*.aiff
+*.jsonl
+__pycache__/
